@@ -21,8 +21,12 @@ def import_path(fullpath):
     del sys.path[0]
     return module
 
+userSettings = None
+try:
+    userSettings = import_path(os.path.join('.', 'settings'))
+except Exception as e:
+        print("Unable to find user settings")
 
-userSettings = import_path(os.path.join('.', 'settings'))
 symbolSettings = None
 symbol = sys.argv[1] if len(sys.argv) > 1 else None
 if symbol:
@@ -35,7 +39,8 @@ if symbol:
 # Assemble settings.
 settings = {}
 settings.update(vars(baseSettings))
-settings.update(vars(userSettings))
+if userSettings:
+    settings.update(vars(userSettings))
 if symbolSettings:
     settings.update(vars(symbolSettings))
 
